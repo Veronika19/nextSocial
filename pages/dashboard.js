@@ -10,7 +10,6 @@ import {
 } from "../redux/actions/profileActions";
 import { deleteAccount } from "../redux/actions/authActions";
 import { toUcFirst } from "../utils/commonfunctions";
-import Spinner from "../utils/spinner";
 
 function Dashboard() {
 	const { isAuthenticated, user } = useSelector((state) => state.auth);
@@ -85,100 +84,74 @@ function Dashboard() {
 	}
 
 	let dashboardContent;
-	if (profile == null || loading) {
-		dashboardContent = <Spinner />;
-	} else {
-		if (Object.keys(profile).length > 0) {
-			dashboardContent = (
-				<div className="dashboard">
-					<div className="container">
-						<div className="row">
-							<div className="col-md-12">
-								<h1 className="display-4">Dashboard</h1>
-								<p className="lead text-muted">
-									Welcome {user.name && toUcFirst(user.name)} to Dev Zilla
-								</p>
+	if (profile && Object.keys(profile).length > 0) {
+		dashboardContent = (
+			<div className="dashboard">
+				<div className="container">
+					<div className="row">
+						<div className="col-md-12">
+							<h1 className="display-4">Dashboard</h1>
+							<p className="lead text-muted">
+								Welcome {user.name && toUcFirst(user.name)} to Dev Zilla
+							</p>
 
-								<div className="btn-group mb-4" role="group">
-									<Link href="/edit-profile">
-										<a className="btn btn-light">
-											<i className="fas fa-user-circle text-info mr-1"></i> Edit
-											Profile
-										</a>
-									</Link>
-									&nbsp;
-									<Link href="/create-experience">
-										<a className="btn btn-light">
-											<i className="fab fa-black-tie text-info mr-1"></i>
-											Add Experience
-										</a>
-									</Link>
-									&nbsp;
-									<Link href="/create-education">
-										<a className="btn btn-light">
-											<i className="fas fa-graduation-cap text-info mr-1"></i>
-											Add Education
-										</a>
-									</Link>
-								</div>
-
-								<div>
-									<h4 className="mb-2">Experience Credentials</h4>
-									<table className="table">
-										<thead>
-											<tr>
-												<th>Company</th>
-												<th>Title</th>
-												<th>Years</th>
-												<th />
-											</tr>
-										</thead>
-										<tbody>{renderDataTabel("exp")}</tbody>
-									</table>
-								</div>
-
-								<div>
-									<h4 className="mb-2">Education Credentials</h4>
-									<table className="table">
-										<thead>
-											<tr>
-												<th>School</th>
-												<th>Degree</th>
-												<th>Years</th>
-												<th />
-											</tr>
-										</thead>
-										<tbody>{renderDataTabel("edu")}</tbody>
-									</table>
-								</div>
-
-								<div style={{ marginBottom: "60px" }}>
-									<button onClick={deleteProfile} className="btn btn-danger">
-										Delete My Account
-									</button>
-									&nbsp;
-									<Link href="/change-password">
-										<a className="btn btn btn-info">Change Password</a>
-									</Link>
-								</div>
-							</div>
-						</div>
-					</div>
-				</div>
-			);
-		} else {
-			dashboardContent = (
-				<div className="dashboard">
-					<div className="container">
-						<div className="row">
-							<div className="col-md-12">
-								<h3 className="lead text-muted">
-									Welcome {user.name && toUcFirst(user.name)} to Dev Zilla
-								</h3>
-								<p> You have not setup a profile please add your info</p>
-								<Link href="/create-profile">
-									<a className="btn btn btn-info">Create Profile</a>
+							<div className="btn-group mb-4" role="group">
+								<Link href="/edit-profile">
+									<a className="btn btn-light">
+										<i className="fas fa-user-circle text-info mr-1"></i> Edit
+										Profile
+									</a>
 								</Link>
+								&nbsp;
+								<Link href="/create-experience">
+									<a className="btn btn-light">
+										<i className="fab fa-black-tie text-info mr-1"></i>
+										Add Experience
+									</a>
+								</Link>
+								&nbsp;
+								<Link href="/create-education">
+									<a className="btn btn-light">
+										<i className="fas fa-graduation-cap text-info mr-1"></i>
+										Add Education
+									</a>
+								</Link>
+							</div>
+
+							<div>
+								<h4 className="mb-2">Experience Credentials</h4>
+								<table className="table">
+									<thead>
+										<tr>
+											<th>Company</th>
+											<th>Title</th>
+											<th>Years</th>
+											<th />
+										</tr>
+									</thead>
+									<tbody>{renderDataTabel("exp")}</tbody>
+								</table>
+							</div>
+
+							<div>
+								<h4 className="mb-2">Education Credentials</h4>
+								<table className="table">
+									<thead>
+										<tr>
+											<th>School</th>
+											<th>Degree</th>
+											<th>Years</th>
+											<th />
+										</tr>
+									</thead>
+									<tbody>{renderDataTabel("edu")}</tbody>
+								</table>
+							</div>
+
+							<div style={{ marginBottom: "60px" }}>
+								<button onClick={deleteProfile} className="btn btn-danger">
+									Delete My Account
+								</button>
 								&nbsp;
 								<Link href="/change-password">
 									<a className="btn btn btn-info">Change Password</a>
@@ -187,12 +160,37 @@ function Dashboard() {
 						</div>
 					</div>
 				</div>
-			);
-		}
+			</div>
+		);
+	} else {
+		dashboardContent = (
+			<div className="dashboard">
+				<div className="container">
+					<div className="row">
+						<div className="col-md-12">
+							<h3 className="lead text-muted">
+								Welcome {user.name && toUcFirst(user.name)} to Dev Zilla
+							</h3>
+							<p> You have not setup a profile please add your info</p>
+							<Link href="/create-profile">
+								<a className="btn btn btn-info">Create Profile</a>
+							</Link>
+							&nbsp;
+							<Link href="/change-password">
+								<a className="btn btn btn-info">Change Password</a>
+							</Link>
+						</div>
+					</div>
+				</div>
+			</div>
+		);
 	}
 
 	return (
-		<Layout title="Dashboard | Next Js Authorization" desc="Users Dashboard">
+		<Layout
+			title="Dashboard | Next Js Authorization"
+			desc="Users profile, experience, education"
+		>
 			{dashboardContent}
 		</Layout>
 	);
