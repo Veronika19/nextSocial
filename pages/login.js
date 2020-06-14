@@ -1,12 +1,15 @@
 import { useForm, ErrorMessage } from "react-hook-form";
 import { useSelector, useDispatch } from "react-redux";
 import { useRouter } from "next/router";
-// import Cookie from "js-cookie";
+import Cookie from "js-cookie";
 
 import Flash from "../utils/flash/";
 import { loginUser } from "../redux/actions/authActions";
 
 import Layout from "../components/layout";
+
+let acctConfirmMsg = Cookie.get("acct-confirm-msg");
+Cookie.remove("acct-confirm-msg", { sameSite: "lax" });
 
 const Login = () => {
 	console.count("login");
@@ -18,20 +21,14 @@ const Login = () => {
 	const { push } = useRouter();
 
 	React.useEffect(() => {
-		console.log("das");
 		if (isAuthenticated) {
 			push("/dashboard");
 		}
 	}, []);
 
-	// let acctConfirmMsg = Cookie.get("acct-confirm-msg");
-	// Cookie.remove("acct-confirm-msg", { sameSite: "lax" });
-
-	// console.log(acctConfirmMsg);
-
 	React.useEffect(() => {
-		console.log("loo");
 		loginErrors && window.flash(loginErrors.connection);
+		window.flash(acctConfirmMsg);
 	}, [loginErrors]);
 
 	function getFormValues(e) {

@@ -17,12 +17,9 @@ class MyDocument extends Document {
 						name="viewport"
 						content="width=device-width, initial-scale=1, shrink-to-fit=no"
 					/>
-					<link
-						rel="stylesheet"
-						href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.5.0/css/bootstrap.min.css"
-					/>
+					<link rel="stylesheet" href="/css/bootstrap.min.css" />
 				</Head>
-				<body>
+				<body style={{ overflowX: "hidden" }}>
 					<Main />
 					<NextScript />
 				</body>

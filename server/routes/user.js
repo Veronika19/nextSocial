@@ -4,16 +4,17 @@ const keys = require("../config/keys");
 const passport = require("passport");
 const validRegisterUser = require("../validation/register");
 const validLoginUser = require("../validation/login");
+const validateUpPassInput = require("../validation/update-pass");
 const mail = require("../config/mail");
 
 module.exports = (app, db) => {
   //@desc user registration
   //@access Public
   app.post("/api/users/register", async (req, res) => {
-    console.log("this");
+    // console.log("this");
     const reqData = req.body;
-    console.log(reqData);
-    const { errors, isValid } = validRegisterUser(reqData, db);
+    // console.log(reqData);
+    const { errors, isValid } = validRegisterUser(reqData);
     // check validation
     if (!isValid) {
       return res.status(400).json(errors);
@@ -226,24 +227,31 @@ module.exports = (app, db) => {
     }
   );
 
-  //@desc return true if matched
+  //@desc return true if updated
   //@access private
   app.post(
     "/api/users/update-password",
     passport.authenticate("jwt", { session: false }),
     async (req, res) => {
+      const reqData = req.body;
+      const { errors, isValid } = validateUpPassInput(reqData);
+      // check validation
+      if (!isValid) {
+        return res.status(400).json({ msg: errors.password2, status: false });
+      }
       try {
         const user = await db.User.findOne({
           where: { id: req.user.id, status: "active" },
         });
         if (user !== null) {
           const salt = await bcrypt.genSalt(10);
-          const password = await bcrypt.hash(req.body.password, salt);
+          const password = await bcrypt.hash(reqData.password, salt);
+          console.log(password);
           const updateUser = await db.User.update(
             { password },
             { where: { id: user.id }, limit: 1 }
           );
-          // console.log(updateUser);
+          console.log(updateUser);
           if (updateUser[0] === 1)
             return res
               .status(200)

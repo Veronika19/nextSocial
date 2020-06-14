@@ -13,9 +13,9 @@ function Layout(props) {
 			</Head>
 			<Navbar />
 
-			<div className="container">
+			<div className={props.home ? `container-fluid px-0` : `container`}>
 				{props.backButton && (
-					<button className="btn btn-primary" onClick={() => Router.back()}>
+					<button className="btn btn-primary" onClick={() => back()}>
 						<span>&#x2b05;</span>
 					</button>
 				)}

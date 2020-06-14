@@ -96,21 +96,21 @@ function Dashboard() {
 							</p>
 
 							<div className="btn-group mb-4" role="group">
-								<Link href="/edit-profile">
+								<Link href="/profile/edit-profile">
 									<a className="btn btn-light">
 										<i className="fas fa-user-circle text-info mr-1"></i> Edit
 										Profile
 									</a>
 								</Link>
 								&nbsp;
-								<Link href="/create-experience">
+								<Link href="/profile/create-experience">
 									<a className="btn btn-light">
 										<i className="fab fa-black-tie text-info mr-1"></i>
 										Add Experience
 									</a>
 								</Link>
 								&nbsp;
-								<Link href="/create-education">
+								<Link href="/profile/create-education">
 									<a className="btn btn-light">
 										<i className="fas fa-graduation-cap text-info mr-1"></i>
 										Add Education
@@ -153,7 +153,7 @@ function Dashboard() {
 									Delete My Account
 								</button>
 								&nbsp;
-								<Link href="/change-password">
+								<Link href="/auth/change-password">
 									<a className="btn btn btn-info">Change Password</a>
 								</Link>
 							</div>
@@ -172,11 +172,11 @@ function Dashboard() {
 								Welcome {user.name && toUcFirst(user.name)} to Dev Zilla
 							</h3>
 							<p> You have not setup a profile please add your info</p>
-							<Link href="/create-profile">
+							<Link href="/profile/create-profile">
 								<a className="btn btn btn-info">Create Profile</a>
 							</Link>
 							&nbsp;
-							<Link href="/change-password">
+							<Link href="/auth/change-password">
 								<a className="btn btn btn-info">Change Password</a>
 							</Link>
 						</div>
@@ -188,7 +188,7 @@ function Dashboard() {
 
 	return (
 		<Layout
-			title="Dashboard | Next Js Authorization"
+			title="Dashboard | DevZilla"
 			desc="Users profile, experience, education"
 		>
 			{dashboardContent}

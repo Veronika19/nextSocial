@@ -18,6 +18,7 @@ app.prepare().then(() => {
 	require("./config/passport")(passport, db);
 	require("./routes/user")(server, db);
 	require("./routes/profile")(server, db);
+	require("./routes/post")(server, db);
 
 	// setting a wildcard route,
 	// to handle each request made to server

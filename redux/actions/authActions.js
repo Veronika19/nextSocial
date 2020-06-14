@@ -78,7 +78,7 @@ export const loginUser = (values, push) => async (dispatch) => {
 
 export const getCurrentUserPass = () => async (dispatch) => {
 	try {
-		const res = await axios.get("api/users/current");
+		const res = await axios.get("/api/users/current");
 		dispatch({ type: FETCH_CURR_PASS, payload: res.data });
 	} catch (err) {
 		dispatch({ type: FETCH_ERRORS, payload: err.response.data });
@@ -87,7 +87,7 @@ export const getCurrentUserPass = () => async (dispatch) => {
 
 export const matchCurrentUserPass = async (values) => {
 	try {
-		const res = await axios.post("api/users/match-password", values);
+		const res = await axios.post("/api/users/match-password", values);
 		return res.data;
 	} catch (err) {
 		return err.response.data;
@@ -96,7 +96,7 @@ export const matchCurrentUserPass = async (values) => {
 
 export const updateUserPass = async (values) => {
 	try {
-		const res = await axios.post("api/users/update-password", values);
+		const res = await axios.post("/api/users/update-password", values);
 		return res.data;
 	} catch (err) {
 		return err.response.data;
