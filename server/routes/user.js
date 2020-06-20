@@ -184,7 +184,7 @@ module.exports = (app, db) => {
         jwt.sign(
           payload,
           keys.secretOrKey,
-          { expiresIn: 3600 },
+          { expiresIn: "2h" },
           (err, token) => {
             res.json({
               success: true,

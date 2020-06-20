@@ -7,43 +7,43 @@ const Profile = (Sequelize, connection) => {
     id: {
       type: Sequelize.INTEGER,
       primaryKey: true,
-      autoIncrement: true
+      autoIncrement: true,
     },
     userId: {
       type: Sequelize.INTEGER,
-      allowNull: false
+      allowNull: false,
     },
     handle: {
       type: Sequelize.STRING,
-      allowNull: false
+      allowNull: false,
+    },
+    totalExp: {
+      type: Sequelize.INTEGER,
+      allowNull: false,
     },
     company: {
-      type: Sequelize.STRING
+      type: Sequelize.STRING,
     },
     website: {
-      type: Sequelize.STRING
+      type: Sequelize.STRING,
     },
     location: {
       type: Sequelize.STRING,
-      allowNull: false
+      allowNull: false,
     },
     status: {
       type: Sequelize.STRING,
-      allowNull: false
+      allowNull: false,
     },
     bio: {
-      type: Sequelize.STRING
+      type: Sequelize.STRING,
     },
     githubusername: {
-      type: Sequelize.STRING
+      type: Sequelize.STRING,
     },
     social: {
-      type: Sequelize.JSON
-    },
-    skills: {
       type: Sequelize.JSON,
-      allowNull: false
-    }
+    },
   });
   return profileSch;
 };

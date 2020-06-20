@@ -1,4 +1,4 @@
-import Layout from "next/layout";
+import Layout from "../../components/layout";
 
 const Profile = () => {
 	return (

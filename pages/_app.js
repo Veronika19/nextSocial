@@ -38,7 +38,7 @@ const MyApp = ({ Component, pageProps }) => {
 			setAuthToken(localStorage.jwtToken);
 			// decode token and get user info and expire time
 			const decoded = jwt_decode(localStorage.jwtToken);
-			dispatch(setCurrentUser(decoded));
+			// dispatch(setCurrentUser(decoded));
 		}
 
 		window.flash = (message, type = "success") =>

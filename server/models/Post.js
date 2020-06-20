@@ -7,26 +7,30 @@ const Post = (Sequelize, connection) => {
     id: {
       type: Sequelize.INTEGER,
       primaryKey: true,
-      autoIncrement: true
+      autoIncrement: true,
     },
     userId: {
       type: Sequelize.INTEGER,
-      allowNull: false
+      allowNull: false,
     },
     title: {
       type: Sequelize.STRING,
-      allowNull: false
+      allowNull: false,
+    },
+    slug: {
+      type: Sequelize.STRING,
+      allowNull: false,
     },
     content: {
-      type: Sequelize.TEXT
+      type: Sequelize.TEXT,
     },
     likesCount: {
       type: Sequelize.INTEGER,
-      allowNull: true
+      allowNull: true,
     },
     commentsCount: {
       type: Sequelize.INTEGER,
-      allowNull: true
+      allowNull: true,
     },
   });
   return postSch;

@@ -7,21 +7,16 @@ const UserSkill = (Sequelize, connection) => {
     id: {
       type: Sequelize.INTEGER,
       primaryKey: true,
-      autoIncrement: true
+      autoIncrement: true,
     },
     userId: {
       type: Sequelize.INTEGER,
       allowNull: false,
-      references: {
-        // user hasMany users_education 1:1
-        model: "user",
-        key: "id"
-      }
     },
     skillId: {
       type: Sequelize.INTEGER,
-      allowNull: false
-    }
+      allowNull: false,
+    },
   });
   return userSkillSch;
 };

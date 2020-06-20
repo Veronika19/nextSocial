@@ -2,6 +2,7 @@ const passport = require("passport");
 const validatePostInput = require("../validation/post");
 const xss = require("xss");
 const isEmpty = require("../validation/is-empty.js");
+
 const xssOption = {
   // whilelist: [],
   whiteList: {
@@ -22,11 +23,11 @@ module.exports = (app, db) => {
       const postsList = await db.Post.findAll({
         order: [["createdAt", "DESC"]],
         include: [
-				{
-					model: db.User,
-					include: [db.Profile]
-				}					
-				],
+          {
+            model: db.User,
+            include: [db.Profile],
+          },
+        ],
       });
       if (postsList !== null) {
         return res.status(200).json(postsList);
@@ -34,7 +35,12 @@ module.exports = (app, db) => {
         return res.status(400).json({ noPost: "No posts found." });
       }
     } catch (err) {
-      return res.status(400).json(err);
+      return res
+        .status(400)
+        .json({
+          connectionErr:
+            "There has been some error from our side, please try again",
+        });
     }
   });
 
@@ -62,14 +68,14 @@ module.exports = (app, db) => {
 
   // @access Public
   // @desc View single posts by id
-  app.get("/api/post/:id", async (req, res) => {
-		// user hasOne Profile
-		// post belng to user
-		// post hasMany comment
-		// comment belong to user
+  app.get("/api/post-slug/:slug", async (req, res) => {
+    // user hasOne Profile
+    // post belng to user
+    // post hasMany comment
+    // comment belong to user
     try {
       const postData = await db.Post.findOne({
-        where: { id: req.params.id },
+        where: { slug: req.params.slug },
         include: [
           {
             model: db.Comment,
@@ -78,7 +84,7 @@ module.exports = (app, db) => {
           },
           {
             model: db.User,
-						include: [db.Profile],
+            include: [db.Profile],
           },
         ],
       });

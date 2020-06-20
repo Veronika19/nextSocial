@@ -13,6 +13,24 @@ const postProfilefields = [
   "skills",
 ];
 module.exports = (app, db) => {
+  // @access private
+  // @desc get skill lists
+  app.get("/api/profile/skills", async (req, res) => {
+    try {
+      const skills = await db.Skill.findAll({
+        attributes: ["slug", "name", "id"],
+      });
+      // console.log(skills);
+      if (skills == null) {
+        res.status(404).json({ errors: { data: "Not found data" } });
+      } else {
+        res.status(200).json(skills);
+      }
+    } catch (err) {
+      return res.status(404).json({ errors: { err } });
+    }
+  });
+
   // @access Private
   app.get(
     "/api/profile",
@@ -70,6 +88,7 @@ module.exports = (app, db) => {
   );
 
   // @access Private
+  // @desc Create and Edit of user profile
   app.post(
     "/api/profile",
     passport.authenticate("jwt", { session: false }),
@@ -82,7 +101,15 @@ module.exports = (app, db) => {
       }
 
       const profileFields = {};
-      profileFields.userId = req.user.id;
+      reqData.userId = req.user.id;
+      // console.log(postProfilefields);
+      let skillData = [];
+      if (reqData.hasOwnProperty("skills")) {
+        skillData = reqData.skills.map((skill) => skill);
+      }
+      const isArr = Array.isArray(skillData);
+      console.log(isArr);
+      return res.status(400).send(typeof skillData);
       postProfilefields.map((field) => {
         if (reqData[field]) {
           if (field === "skills") {
@@ -102,7 +129,7 @@ module.exports = (app, db) => {
       socialProf.push(reqData.linkedin.trim());
       // if (reqData.twitter)
       // if (reqData.linkedin)
-      profileFields.social = socialProf.toString();
+      reqData.social = socialProf.toString();
       // console.log(socialVal.split(','));
       // return res.status(404).send(typeof socialVal);
       try {
@@ -111,7 +138,7 @@ module.exports = (app, db) => {
         });
         // return res.json(profile);
         if (profile !== null) {
-          const updatedProf = await profile.update(profileFields, {
+          const updatedProf = await profile.update(reqData, {
             where: { userId: req.user.id },
           });
           return res.status(200).json(updatedProf);
@@ -123,7 +150,7 @@ module.exports = (app, db) => {
             errors.handle = "The handle is already present";
             return res.status(404).json(errors);
           } else {
-            const addProfile = await db.Profile.create(profileFields);
+            const addProfile = await db.Profile.create(reqData);
             if (addProfile.dataValues.hasOwnProperty("id")) {
               return res.status(200).json(addProfile.id);
             } else {

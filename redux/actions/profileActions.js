@@ -11,7 +11,6 @@ import {
 
 export const getProfileList = () => async (dispatch) => {
 	// request to get logged in user profile
-	dispatch(setProfileLoading());
 	try {
 		const res = await axios.get("/api/profile/all");
 		dispatch({ type: GET_PROFILES, payload: res.data });
@@ -25,7 +24,6 @@ export const getProfileList = () => async (dispatch) => {
 
 export const getCurrentProfile = (para) => async (dispatch) => {
 	// request to get logged in user profile
-	dispatch(setProfileLoading());
 	try {
 		//starts: setting Authorization forceFully as after logging from google
 		// there was a dealy in setting authorization in header
@@ -45,7 +43,6 @@ export const getCurrentProfile = (para) => async (dispatch) => {
 
 export const getProfileByHandle = (handle) => async (dispatch) => {
 	// request to get logged in user profile
-	dispatch(setProfileLoading());
 	try {
 		const res = await axios.get(`/api/profile/handle/${handle}`);
 		dispatch({ type: GET_PROFILE, payload: res.data });

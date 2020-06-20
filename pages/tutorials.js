@@ -2,15 +2,13 @@ import { useRouter } from "next/router";
 import Link from "next/link";
 import { useSelector, useDispatch } from "react-redux";
 import { useForm, ErrorMessage } from "react-hook-form";
+import Flash from "../utils/flash";
 
-import Layout from "../../components/layout";
-import {
-	getAllPost,
-	addPost,
-	deletePost,
-} from "../../redux/actions/postActions";
+import Layout from "../components/layout";
+import { stringToSlug } from "../utils/commonfunctions";
+import { getAllPost, addPost, deletePost } from "../redux/actions/postActions";
 
-function Articles() {
+function Tutorials() {
 	const { errors, register, handleSubmit, reset } = useForm();
 	const dispatch = useDispatch();
 	const { isAuthenticated, user } = useSelector((state) => state.auth);
@@ -21,11 +19,16 @@ function Articles() {
 	// if (!isAuthenticated) push("/login");
 
 	React.useEffect(() => {
+		postErr && window.flash(postErr.connectionErr);
+	}, [postErr]);
+
+	React.useEffect(() => {
 		dispatch(getAllPost());
 	}, [dispatch]);
 
 	function savePost(e) {
 		// console.log(e);
+		e.slug = stringToSlug(e.title);
 		dispatch(addPost(e, reset));
 	}
 
@@ -69,12 +72,12 @@ function Articles() {
 					</div>
 					<div className="col-md-10">
 						<h3 className="card-title">{post.title}</h3>
-						<p className="lead">{post.content}</p>
+						<p className="lead">{post.content.slice(0, 250)}</p>
 						<button type="button" className="btn btn-light mr-1">
 							<i className="text-info fas fa-thumbs-up"></i>
 							<span className="badge badge-light">{post.likesCount}</span>
 						</button>
-						<Link href={`/post/${post.id}/comment/`}>
+						<Link href="/tutorial/[slug]" as={`/tutorial/${post.slug}`}>
 							<a className="btn btn-info mr-1">
 								Comments - ({post.commentsCount})
 							</a>
@@ -84,6 +87,8 @@ function Articles() {
 				</div>
 			);
 		});
+	} else {
+		postFeed = <Flash />;
 	}
 
 	let postBox;
@@ -155,16 +160,8 @@ function Articles() {
 					</div>
 				</div>
 			</div>
-
-			<style jsx>
-				{`
-					.posts .row .col-md-2 img {
-						width: 100%;
-					}
-				`}
-			</style>
 		</Layout>
 	);
 }
 
-export default Articles;
+export default Tutorials;

@@ -53,10 +53,9 @@ export const getAllPost = (values) => async (dispatch) => {
 	}
 };
 
-export const getPostById = (id) => async (dispatch) => {
-	dispatch(loadingPost());
+export const getPostBySlug = (id) => async (dispatch) => {
 	try {
-		const res = await axios.get(`/api/post/${id}`);
+		const res = await axios.get(`/api/post-slug/${id}`);
 		// console.log(res);
 		dispatch({ type: GET_POST, payload: res.data });
 	} catch (err) {

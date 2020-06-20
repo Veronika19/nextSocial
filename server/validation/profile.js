@@ -9,13 +9,13 @@ function validateProfileInput(data) {
   data.handle = !isEmpty(data.handle) ? data.handle : "";
   data.company = !isEmpty(data.company) ? data.company : "";
   data.location = !isEmpty(data.location) ? data.location : "";
-  data.skills = !isEmpty(data.skills) ? data.skills : "";
+  // data.skills = !isEmpty(data.skills) ? data.skills : "";
 
   if (!Validator.isLength(data.handle, { min: 2, max: 40 })) {
     errors.handle = "Handle needs to be between 2 and 40 chars.";
   }
 
-  const moreFileds = ["Skills", "Handle", "Company", "Location"];
+  const moreFileds = ["Handle", "Company", "Location"];
   moreFileds.map((field) => {
     if (Validator.isEmpty(data[field.toLowerCase()])) {
       errors[field.toLowerCase()] = `${field} is required`;
