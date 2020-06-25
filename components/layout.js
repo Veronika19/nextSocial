@@ -1,4 +1,4 @@
-import Navbar from "./Navbar";
+import Navbar from "./navbar";
 import Head from "next/head";
 import { useRouter } from "next/router";
 import jwt_decode from "jwt-decode";
