@@ -153,6 +153,7 @@ module.exports = (app, db) => {
 
   app.post("/api/users/login", async (req, res) => {
     const reqData = req.body;
+    // console.log(reqData);
     const { errors, isValid } = validLoginUser(reqData);
 
     if (!isValid) {

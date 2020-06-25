@@ -2,18 +2,24 @@ import { useRouter } from "next/router";
 import Link from "next/link";
 import { useSelector, useDispatch } from "react-redux";
 import { useForm, ErrorMessage } from "react-hook-form";
-import Flash from "../utils/flash";
+import axios from "axios";
 
+import Flash from "../utils/flash";
 import Layout from "../components/layout";
 import { stringToSlug } from "../utils/commonfunctions";
-import { getAllPost, addPost, deletePost } from "../redux/actions/postActions";
+import { addPost, deletePost } from "../redux/actions/postActions";
 
-function Tutorials() {
+function Tutorials(props) {
+	console.count("tutorial");
 	const { errors, register, handleSubmit, reset } = useForm();
 	const dispatch = useDispatch();
 	const { isAuthenticated, user } = useSelector((state) => state.auth);
 	const postErr = useSelector((state) => state.errors);
-	const { posts, loading } = useSelector((state) => state.post);
+	let { posts } = useSelector((state) => state.post);
+	if (posts === null) posts = props.posts;
+
+	// console.log(posts);
+
 	const { push } = useRouter();
 
 	// if (!isAuthenticated) push("/login");
@@ -21,10 +27,6 @@ function Tutorials() {
 	React.useEffect(() => {
 		postErr && window.flash(postErr.connectionErr);
 	}, [postErr]);
-
-	React.useEffect(() => {
-		dispatch(getAllPost());
-	}, [dispatch]);
 
 	function savePost(e) {
 		// console.log(e);
@@ -53,7 +55,7 @@ function Tutorials() {
 	}
 
 	let postFeed;
-	if (posts) {
+	if (posts.length >= 1) {
 		postFeed = posts.map((post) => {
 			return (
 				<div key={post.id} className="row" style={{ marginBottom: "50px" }}>
@@ -88,7 +90,13 @@ function Tutorials() {
 			);
 		});
 	} else {
-		postFeed = <Flash />;
+		postFeed = (
+			<div className="row justify-content-center">
+				<i className={`alert alert-warning`}>
+					Sorry no tutorials to enlighten you !
+				</i>
+			</div>
+		);
 	}
 
 	let postBox;
@@ -164,4 +172,15 @@ function Tutorials() {
 	);
 }
 
-export default Tutorials;
+// Next.js will pre-render this page at build time using the props returned by getStaticProps.
+export async function getServerSideProps(ctx) {
+	let res = {};
+	// console.log(ctx.req.headers);
+	const axioscfg = ctx.req ? { baseURL: "http://localhost:3000" } : {};
+	res = await axios.get(`/api/posts`, axioscfg);
+	return {
+		props: { posts: res.data }, // will be passed to the page component as props
+	};
+}
+
+export default React.memo(Tutorials);

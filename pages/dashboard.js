@@ -1,7 +1,9 @@
 import { useRouter } from "next/router";
 import Link from "next/link";
 import { useDispatch, useSelector } from "react-redux";
+import axios from "axios";
 
+import ssrAuth from "../utils/ssrAuth";
 import Layout from "../components/layout";
 import {
 	getCurrentProfile,
@@ -11,23 +13,25 @@ import {
 import { deleteAccount } from "../redux/actions/authActions";
 import { toUcFirst } from "../utils/commonfunctions";
 
-function Dashboard() {
+function Dashboard(props) {
+	console.count("dashboard");
 	const { isAuthenticated, user } = useSelector((state) => state.auth);
+	let { profile } = useSelector((state) => state.profile);
+	if (profile === null) profile = props.profile;
+
 	const { push } = useRouter();
 
 	React.useEffect(() => {
-		if (!isAuthenticated) {
+		if (!isAuthenticated && profile === null) {
 			push("/login");
 		}
 	}, []);
 
 	// In case user reloads dahsboard
 	const dispatch = useDispatch();
-	React.useEffect(() => {
-		dispatch(getCurrentProfile());
-	}, [dispatch]);
-
-	const { profile, loading } = useSelector((state) => state.profile);
+	// React.useEffect(() => {
+	// 	dispatch(getCurrentProfile());
+	// }, [dispatch]);
 
 	function deleteProfile() {
 		if (
@@ -196,4 +200,20 @@ function Dashboard() {
 	);
 }
 
-export default Dashboard;
+// Next.js will pre-render this page at build time using the props returned by getStaticProps.
+export async function getServerSideProps(ctx) {
+	let res = {};
+	// console.log(ctx.req.headers);
+	const axioscfg = ssrAuth(ctx, axios);
+	// console.log(axioscfg);
+	if (axioscfg) {
+		res = await axios.get(`/api/profile`, axioscfg);
+		return {
+			props: { profile: res.data }, // will be passed to the page component as props
+		};
+	}
+
+	return { props: { profile: false } };
+}
+
+export default React.memo(Dashboard);

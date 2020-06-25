@@ -110,4 +110,4 @@ const Navmenu = () => {
 	);
 };
 
-export default Navmenu;
+export default React.memo(Navmenu);

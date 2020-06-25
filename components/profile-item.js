@@ -3,21 +3,22 @@ import Link from "next/link";
 
 function ProfileItem(props) {
   const profile = props.profile;
+  // console.log(profile);
   const key = props.profile.id;
 
-  function userSkills(skills) {
-    return skills
-      .slice(1, -1)
-      .split(",")
-      .map((skill) => {
-        return (
-          <li key={skill} className="list-group-item">
-            <i className="fa fa-check pr-1"></i>
-            {skill}
-          </li>
-        );
-      });
-  }
+  // function userSkills(skills) {
+  //   return skills
+  //     .slice(1, -1)
+  //     .split(",")
+  //     .map((skill) => {
+  //       return (
+  //         <li key={skill} className="list-group-item">
+  //           <i className="fa fa-check pr-1"></i>
+  //           {skill}
+  //         </li>
+  //       );
+  //     });
+  // }
 
   return (
     <div className="card card-body bg-light mb-3">
@@ -45,11 +46,11 @@ function ProfileItem(props) {
         </div>
         <div className="col-md-4 d-none d-lg-block">
           <h4>Skill Set</h4>
-          <ul className="list-group">{userSkills(profile.skills)}</ul>
+          {/*<ul className="list-group">{userSkills(profile.skills)}</ul>*/}
         </div>
       </div>
     </div>
   );
 }
 
-export default ProfileItem;
+export default React.memo(ProfileItem);

@@ -43,7 +43,7 @@ export const commentDelete = (commentId, postId) => async (dispatch) => {
 };
 
 export const getAllPost = (values) => async (dispatch) => {
-	dispatch(loadingPost());
+	// dispatch(loadingPost());
 	try {
 		const res = await axios.get("/api/posts");
 		dispatch({ type: FETCH_ERRORS, payload: null });

@@ -31,7 +31,7 @@ export const submitRegister = (values, push) => async (dispatch) => {
 		let succMsg =
 			"Your account has been created, please confirm your email address to active it.";
 		Cookie.set("acct-confirm-msg", succMsg, {
-			expires: 4,
+			expires: 1,
 			sameSite: "lax",
 		});
 		push("/login");
@@ -62,14 +62,19 @@ export const loginUser = (values, push) => async (dispatch) => {
 		// save to localStorage
 		const { token } = res.data;
 		// set token to localStorage only store data in string
-		localStorage.setItem("jwtToken", token);
+		Cookie.set("jwtToken", token, {
+			expires: 1,
+			sameSite: "lax",
+			secure: true,
+		});
+		// localStorage.setItem("jwtToken", token);
 		// Set token to header
 		// from util directory setAuthToken.js
 		setAuthToken(token);
 		// decode token to get user data
 		const decoded = jwt_decode(token);
 		dispatch(setCurrentUser(decoded));
-		push("/");
+		push("/dashboard");
 	} catch (err) {
 		console.log(err);
 		dispatch({ type: FETCH_ERRORS, payload: err.response.data });
@@ -128,8 +133,9 @@ export const deleteAccount = () => async (dispatch) => {
 };
 
 export const logout = () => (dispatch) => {
-	// remove token from localStorage
-	localStorage.removeItem("jwtToken");
+	// remove token from jwt token
+	Cookie.remove("jwtToken");
+	// localStorage.removeItem("jwtToken");
 	// Remove Auth token from axios request
 	setAuthToken(false);
 	// reset auth state

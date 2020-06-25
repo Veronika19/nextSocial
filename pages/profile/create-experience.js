@@ -11,15 +11,9 @@ function CreateExperience() {
 
 	const { handleSubmit, errors, register } = useForm();
 	const formErrors = useSelector((state) => state.errors);
-	const { isAuthenticated } = useSelector((state) => state.auth);
+	// const { isAuthenticated } = useSelector((state) => state.auth);
 	const { push } = useRouter();
 	const dispatch = useDispatch();
-
-	React.useEffect(() => {
-		if (!isAuthenticated) {
-			push("/login");
-		}
-	}, []);
 
 	function getFormValues(e) {
 		dispatch(createExperience(e, push));

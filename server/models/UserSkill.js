@@ -3,7 +3,7 @@
 // https://sequelize.org/master/manual/naming-strategies.html
 
 const UserSkill = (Sequelize, connection) => {
-  let userSkillSch = connection.define("UserSkill", {
+  let userSkillSch = connection.define("users_skills", {
     id: {
       type: Sequelize.INTEGER,
       primaryKey: true,

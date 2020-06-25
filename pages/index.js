@@ -5,6 +5,7 @@ import { useSelector } from "react-redux";
 import Layout from "../components/layout";
 
 function Index() {
+	console.count("index");
 	const { isAuthenticated } = useSelector((state) => state.auth);
 	const { push } = useRouter();
 	React.useEffect(() => {
@@ -74,4 +75,4 @@ function Index() {
 	);
 }
 
-export default Index;
+export default React.memo(Index);

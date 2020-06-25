@@ -1,23 +1,22 @@
 import { useDispatch, useSelector } from "react-redux";
+import axios from "axios";
 
 import Layout from "../components/layout";
 import ProfileItem from "../components/profile-item";
 import { getProfileList } from "../redux/actions/profileActions";
 import Flash from "../utils/flash";
 
-function Freelancers() {
+function Freelancers(props) {
+	console.count("freelancer");
 	// const [fetchErrors, setFetchErrors] = useState(null);
 	const dispatch = useDispatch();
-	const { profiles, loading } = useSelector((state) => state.profile);
+	let { profiles, loading } = useSelector((state) => state.profile);
 	const errors = useSelector((state) => state.errors);
+	if (profiles === null) profiles = props.profiles;
 
 	React.useEffect(() => {
 		errors && window.flash(errors.connectionErr);
 	}, [errors]);
-
-	React.useEffect(() => {
-		dispatch(getProfileList());
-	}, [dispatch]);
 
 	// console.count("counter");
 
@@ -53,4 +52,18 @@ function Freelancers() {
 	);
 }
 
-export default Freelancers;
+// Next.js will pre-render this page at build time using the props returned by getStaticProps.
+export async function getServerSideProps(ctx) {
+	let res = {};
+	const axioscfg = ctx.req ? { baseURL: `http://${ctx.req.headers.host}` } : {};
+	try {
+		res = await axios.get(`/api/profile/all`, axioscfg);
+		return {
+			props: { profiles: res.data }, // will be passed to the page component as props
+		};
+	} catch (err) {
+		return { props: { profiles: [] } };
+	}
+}
+
+export default React.memo(Freelancers);

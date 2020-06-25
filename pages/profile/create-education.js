@@ -8,16 +8,17 @@ import { createEducation } from "../../redux/actions/profileActions";
 function CreateEducation() {
 	const [current, setCurrent] = React.useState(false);
 	const [relieve, setRelieve] = React.useState(false);
-	const { isAuthenticated } = useSelector((state) => state.auth);
+	// const { isAuthenticated } = useSelector((state) => state.auth);
+	const formErrors = useSelector((state) => state.errors);
 	const { handleSubmit, errors, register } = useForm();
 	const dispatch = useDispatch();
 	const { push } = useRouter();
 
-	React.useEffect(() => {
-		if (!isAuthenticated) {
-			push("/login");
-		}
-	});
+	// React.useEffect(() => {
+	// 	if (!isAuthenticated) {
+	// 		push("/login");
+	// 	}
+	// });
 
 	function onCheck(e) {
 		setCurrent((prevVal) => !prevVal);
@@ -89,6 +90,7 @@ function CreateEducation() {
 						</div>
 						<div className="form-check mb-4">
 							<input
+								ref={register({ required: false })}
 								checked={current}
 								onChange={onCheck}
 								className="form-check-input"
@@ -113,6 +115,9 @@ function CreateEducation() {
 								name="joinDate"
 								as="p"
 							/>
+							<i className="alert-danger">
+								{formErrors && formErrors.joinDate}
+							</i>
 						</div>
 						<h6>To Date</h6>
 						<div className="form-group">
@@ -123,6 +128,9 @@ function CreateEducation() {
 								className="form-control form-control-lg"
 								name="relieveDate"
 							/>
+							<i className="alert-danger">
+								{formErrors && formErrors.relieveDate}
+							</i>
 						</div>
 						<div className="form-group">
 							<textarea

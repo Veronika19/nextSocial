@@ -9,11 +9,14 @@ import Experience from "../../components/profile/exp";
 import Flash from "../../utils/flash";
 
 const User = ({ profile }) => {
+	console.count("user pro");
 	const errors = useSelector((state) => state.errors);
 
 	React.useEffect(() => {
 		errors && window.flash(errors.connectionErr);
 	}, [errors]);
+
+	let profileSkills = "kdkdk";
 
 	let singleProfile;
 	if (profile === null) {
@@ -33,9 +36,7 @@ const User = ({ profile }) => {
 	return (
 		<Layout
 			title={`${profile.User.name} - ${profile.status} at ${profile.company} | Devzilla`}
-			desc={`${profile.skills.slice(1, -1)} developer in Delhi-NCR, ${
-				profile.location
-			} and gurgaon`}
+			desc={`${profileSkills} developer in Delhi-NCR, ${profile.location} and gurgaon`}
 		>
 			<div className="profile">
 				<div className="container">
@@ -48,12 +49,12 @@ const User = ({ profile }) => {
 	);
 };
 
-User.getInitialProps = async (ctx) => {
+export async function getServerSideProps(ctx) {
 	const handle = ctx.query.user;
-	const axioscfg = ctx.req ? { baseURL: "http://localhost:3000" } : {};
+	const axioscfg = ctx.req ? { baseURL: `http://${ctx.req.headers.host}` } : {};
 	const res = await axios.get(`/api/profile/handle/${handle}`, axioscfg);
 	// console.log(res.data);
-	return { profile: res.data };
-};
+	return { props: { profile: res.data } };
+}
 
-export default User;
+export default React.memo(User);

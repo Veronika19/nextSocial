@@ -25,4 +25,4 @@ const reducer = (state, action) => {
 export const initStore = () =>
 	createStore(reducer, composeEnhancers(applyMiddleware(reduxThunk)));
 
-export const wrapper = createWrapper(initStore, { debug: true });
+export const wrapper = createWrapper(initStore, { debug: false });

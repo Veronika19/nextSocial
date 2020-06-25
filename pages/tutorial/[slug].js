@@ -13,6 +13,8 @@ import {
 import isEmpty from "../../utils/is-empty.js";
 
 function Single(props) {
+	console.count("single");
+
 	const router = useRouter();
 	const postSlug = router.query.slug;
 	const { errors, handleSubmit, register, reset } = useForm();
@@ -163,13 +165,13 @@ function Single(props) {
 	);
 }
 
-Single.getInitialProps = async (ctx) => {
+export async function getServerSideProps(ctx) {
 	const slug = ctx.query.slug;
 	let res = {};
-	const axioscfg = ctx.req ? { baseURL: "http://localhost:3000" } : {};
+	const axioscfg = ctx.req ? { baseURL: `http://${ctx.req.headers.host}` } : {};
 	res = await axios.get(`/api/post-slug/${slug}`, axioscfg);
 	// console.log(res.data);
-	return { post: res.data };
-};
+	return { props: { post: res.data } };
+}
 
-export default Single;
+export default React.memo(Single);

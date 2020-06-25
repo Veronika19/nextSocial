@@ -28,8 +28,8 @@ export const getCurrentProfile = (para) => async (dispatch) => {
 		//starts: setting Authorization forceFully as after logging from google
 		// there was a dealy in setting authorization in header
 		// only in case of google oauth
-		const token = localStorage.getItem("jwtToken");
-		axios.defaults.headers.common["Authorization"] = token;
+		// const token = localStorage.getItem("jwtToken");
+		// axios.defaults.headers.common["Authorization"] = token;
 		// ends:
 		const res = await axios.get("/api/profile");
 		if (para === "create") {
@@ -63,7 +63,7 @@ export const editCurrentProfile = () => async (dispatch) => {
 };
 
 export const saveProfile = (values, push) => async (dispatch) => {
-	dispatch(setProfileLoading());
+	// dispatch(setProfileLoading());
 	try {
 		await axios.post("/api/profile", values);
 		dispatch({ type: FETCH_ERRORS, payload: null });

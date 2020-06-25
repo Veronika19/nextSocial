@@ -60,6 +60,10 @@ db.Profile.hasMany(db.UserEducation, {
 	sourceKey: "userId",
 	foreignKey: "userId",
 });
+db.Profile.hasMany(db.UserSkill, {
+	sourceKey: "userId",
+	foreignKey: "userId",
+});
 db.UserEducation.belongsTo(db.User, { foreignKey: "userId" });
 db.UserExperience.belongsTo(db.User, { foreignKey: "userId" });
 db.UserSkill.belongsTo(db.User, { foreignKey: "userId" });

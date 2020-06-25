@@ -41,22 +41,15 @@ module.exports = (app, db) => {
         const profile = await db.Profile.findOne({
           where: { userId: req.user.id },
           include: [db.UserExperience, db.UserEducation],
-          attributes: [
-            "handle",
-            "company",
-            "location",
-            "status",
-            "skills",
-            "social",
-          ],
+          attributes: ["handle", "company", "location", "status", "social"],
           // include: [db.User, db.UserEducation, db.UserExperience]
         });
-        if (profile !== null) {
-          return res.status(200).json(profile);
-        } else {
-          errors.message = "No Profile details found";
-          return res.status(404).json(errors);
-        }
+        // if (profile !== null) {
+        return res.status(200).json(profile);
+        // } else {
+        // errors.message = "No Profile details found";
+        // return res.status(404).json(errors);
+        // }
       } catch (err) {
         return res.status(404).json(err);
       }
@@ -73,7 +66,19 @@ module.exports = (app, db) => {
       try {
         const profile = await db.Profile.findOne({
           where: { userId: req.user.id },
-          // include: [db.User, db.UserEducation, db.UserExperience]
+          attributes: [
+            "handle",
+            "totalExp",
+            "company",
+            "social",
+            "website",
+            "location",
+            "status",
+            "bio",
+            "githubusername",
+            "userId",
+          ],
+          include: [{ model: db.UserSkill, attributes: ["skillId"] }],
         });
         if (profile !== null) {
           return res.status(200).json(profile);
@@ -86,6 +91,18 @@ module.exports = (app, db) => {
       }
     }
   );
+
+  async function updateUsersprofile(db, req, reqData, res) {
+    await db.UserSkill.destroy({
+      where: { userId: req.user.id },
+    });
+    const updatedProf = await db.Profile.update(reqData, {
+      where: { userId: req.user.id },
+    });
+    console.log(reqData.users_skills);
+    await db.UserSkill.bulkCreate(reqData.users_skills);
+    return res.status(200).json(updatedProf);
+  }
 
   // @access Private
   // @desc Create and Edit of user profile
@@ -100,48 +117,26 @@ module.exports = (app, db) => {
         return res.status(400).json(errors);
       }
 
-      const profileFields = {};
       reqData.userId = req.user.id;
-      // console.log(postProfilefields);
-      let skillData = [];
-      if (reqData.hasOwnProperty("skills")) {
-        skillData = reqData.skills.map((skill) => skill);
-      }
-      const isArr = Array.isArray(skillData);
-      console.log(isArr);
-      return res.status(400).send(typeof skillData);
-      postProfilefields.map((field) => {
-        if (reqData[field]) {
-          if (field === "skills") {
-            profileFields.skills = reqData.skills
-              .split(",")
-              .map((skill) => skill.trim())
-              .toString();
-          } else {
-            profileFields[field] = reqData[field];
-          }
-        }
+
+      reqData.users_skills = reqData.users_skills.map((skill) => {
+        return { skillId: skill, userId: req.user.id };
       });
+
       socialProf = [];
-      // if (reqData.facebook)
       socialProf.push(reqData.twitter.trim());
       socialProf.push(reqData.facebook.trim());
       socialProf.push(reqData.linkedin.trim());
-      // if (reqData.twitter)
-      // if (reqData.linkedin)
       reqData.social = socialProf.toString();
-      // console.log(socialVal.split(','));
-      // return res.status(404).send(typeof socialVal);
+
       try {
         const profile = await db.Profile.findOne({
           where: { userId: req.user.id },
         });
         // return res.json(profile);
         if (profile !== null) {
-          const updatedProf = await profile.update(reqData, {
-            where: { userId: req.user.id },
-          });
-          return res.status(200).json(updatedProf);
+          // console.log(reqData);
+          updateUsersprofile(db, req, reqData, res);
         } else {
           const checkHandle = await db.Profile.findOne({
             where: { handle: reqData.handle },
@@ -150,7 +145,10 @@ module.exports = (app, db) => {
             errors.handle = "The handle is already present";
             return res.status(404).json(errors);
           } else {
-            const addProfile = await db.Profile.create(reqData);
+            // https://sequelize.org/master/manual/creating-with-associations.html
+            const addProfile = await db.Profile.create(reqData, {
+              include: [db.UserSkill],
+            });
             if (addProfile.dataValues.hasOwnProperty("id")) {
               return res.status(200).json(addProfile.id);
             } else {
@@ -160,7 +158,8 @@ module.exports = (app, db) => {
           }
         }
       } catch (err) {
-        return res.status(400).json(err);
+        console.log(err);
+        return res.status(402).json(err);
       }
     }
   );
@@ -173,13 +172,12 @@ module.exports = (app, db) => {
       const handle = req.params.handle;
       const profile = await db.Profile.findOne({
         where: { handle },
-        include: [db.User, db.UserExperience, db.UserEducation],
+        include: [db.User, db.UserExperience, db.UserEducation, db.UserSkill],
         attributes: [
           "handle",
           "company",
           "location",
           "status",
-          "skills",
           "social",
           "bio",
         ],
@@ -231,7 +229,13 @@ module.exports = (app, db) => {
       const profile = await db.Profile.findAll({
         where: {},
         order: [["createdAt", "DESC"]],
-        include: [{ model: db.User, where: { status: "active" } }],
+        include: [
+          {
+            model: db.User,
+            where: { status: "active" },
+            include: [db.UserSkill],
+          },
+        ],
       });
       if (profile == null) {
         errors.noProfile = "No Profile found";
@@ -383,6 +387,7 @@ module.exports = (app, db) => {
     passport.authenticate("jwt", { session: false }),
     async (req, res) => {
       const reqData = req.body;
+      // console.log(reqData);
       const { errors, isValid } = validateEduInput(reqData);
       if (!isValid) {
         return res.status(400).json(errors);

@@ -84,7 +84,7 @@ function About(props) {
             <p className="lead">{profile.bio}</p>
             <hr />
             <h3 className="text-center text-info">Skill Set</h3>
-            <div className="row">{listSkills(profile.skills)}</div>
+            <div className="row">{/*listSkills(profile.skills)*/}</div>
           </div>
         </div>
       </div>
