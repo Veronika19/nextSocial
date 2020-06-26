@@ -1,8 +1,12 @@
 {
   "name": "nextAuth",
   "version": "1.0.0",
-  "description": "",
-  "main": "index.js",
+  "description": "Social Network for developer - NextJs",
+  "main": "server/server.js",
+  "engines": {
+    "node": "12.14.1",
+    "npm": "6.13.4"
+  },
   "scripts": {
     "dev": "nodemon server/server.js",
     "start": "node server/server.js",
