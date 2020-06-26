@@ -176,7 +176,7 @@ function Tutorials(props) {
 export async function getServerSideProps(ctx) {
 	let res = {};
 	// console.log(ctx.req.headers);
-	const axioscfg = ctx.req ? { baseURL: "http://localhost:3000" } : {};
+	const axioscfg = ctx.req ? { baseURL: `http://${ctx.req.headers.host}` } : {};
 	res = await axios.get(`/api/posts`, axioscfg);
 	return {
 		props: { posts: res.data }, // will be passed to the page component as props
