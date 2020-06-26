@@ -134,7 +134,7 @@ export const deleteAccount = () => async (dispatch) => {
 
 export const logout = () => (dispatch) => {
 	// remove token from jwt token
-	Cookie.remove("jwtToken");
+	Cookie.remove("jwtToken", { sameSite: "lax" });
 	// localStorage.removeItem("jwtToken");
 	// Remove Auth token from axios request
 	setAuthToken(false);
