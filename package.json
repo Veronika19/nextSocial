@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "dev": "nodemon server/server.js",
-    "start": "SET NODE_ENV=production && node server/server.js",
+    "start": "node server/server.js",
     "start-next": "next start",
     "build": "next build"
   },

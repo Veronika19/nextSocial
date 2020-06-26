@@ -8,6 +8,10 @@ const validateUpPassInput = require("../validation/update-pass");
 const mail = require("../config/mail");
 
 module.exports = (app, db) => {
+  app.get("/api/test", (req, res) => {
+    res.status(200).json({ hello: "world" });
+  });
+
   //@desc user registration
   //@access Public
   app.post("/api/users/register", async (req, res) => {
